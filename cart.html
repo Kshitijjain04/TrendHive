@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Cart — E-Commerce Product Showcase</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand">Your Cart</h1>
+      <nav>
+        <a class="btn" href="index.html">← Continue Shopping</a>
+        <button class="cart-button" aria-label="Cart">
+          <span class="cart-icon">🛒</span>
+          <span id="cartCount" class="cart-count" aria-live="polite">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="cart-wrap" aria-labelledby="cart-heading">
+      <h2 id="cart-heading" class="sr-only">Cart Items</h2>
+      <div id="cartEmpty" class="cart-empty" hidden>No items in cart.</div>
+      <ul id="cartList" class="cart-list" role="list"></ul>
+
+      <aside class="cart-summary">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <strong id="cartSubtotal">$0.00</strong>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>Calculated at checkout</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <strong id="cartTotal">$0.00</strong>
+        </div>
+        <div class="summary-actions">
+          <button id="clearCart" class="btn">Clear Cart</button>
+          <button class="btn primary">Checkout</button>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> Small Business Showcase.</p>
+    </div>
+  </footer>
+
+  <script type="module">
+    import {
+      cartItemsArray, setQty, removeFromCart, clearCart,
+      cartSubtotal, updateCartCount
+    } from './cart.js';
+
+    const list = document.getElementById('cartList');
+    const empty = document.getElementById('cartEmpty');
+    const subtotalEl = document.getElementById('cartSubtotal');
+    const totalEl = document.getElementById('cartTotal');
+
+    function fmt(n){ return `$${n.toFixed(2)}`; }
+
+    function render() {
+      const items = cartItemsArray();
+      updateCartCount();
+
+      if (items.length === 0) {
+        list.innerHTML = '';
+        empty.hidden = false;
+        subtotalEl.textContent = fmt(0);
+        totalEl.textContent = fmt(0);
+        return;
+      }
+
+      empty.hidden = true;
+      list.innerHTML = items.map(it => `
+        <li class="cart-item" data-id="${it.id}">
+          <img src="${it.image}" alt="${it.name}" class="cart-thumb" />
+          <div class="cart-info">
+            <h3 class="cart-title">${it.name || 'Product'}</h3>
+            <div class="cart-price">${fmt(it.price)}</div>
+            <div class="cart-qty">
+              <button class="qty-btn" data-dec aria-label="Decrease quantity">−</button>
+              <input class="qty-input" type="number" min="1" value="${it.qty}" aria-label="Quantity for ${it.name}" />
+              <button class="qty-btn" data-inc aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+          <div class="cart-line-total">${fmt(it.price * it.qty)}</div>
+          <button class="btn remove-btn" data-remove aria-label="Remove ${it.name}">Remove</button>
+        </li>
+      `).join('');
+
+      const sub = cartSubtotal();
+      subtotalEl.textContent = fmt(sub);
+      totalEl.textContent = fmt(sub);
+    }
+
+    document.addEventListener('click', e => {
+      const itemEl = e.target.closest('.cart-item');
+      if (!itemEl) return;
+      const id = itemEl.getAttribute('data-id');
+
+      if (e.target.matches('[data-inc]')) {
+        const input = itemEl.querySelector('.qty-input');
+        input.value = Number(input.value) + 1;
+        setQty(id, Number(input.value));
+        render();
+      }
+      if (e.target.matches('[data-dec]')) {
+        const input = itemEl.querySelector('.qty-input');
+        input.value = Math.max(1, Number(input.value) - 1);
+        setQty(id, Number(input.value));
+        render();
+      }
+      if (e.target.matches('[data-remove]')) {
+        removeFromCart(id);
+        render();
+      }
+    });
+
+    document.addEventListener('change', e => {
+      if (e.target.matches('.qty-input')) {
+        const itemEl = e.target.closest('.cart-item');
+        const id = itemEl.getAttribute('data-id');
+        setQty(id, Math.max(1, Number(e.target.value || 1)));
+        render();
+      }
+    });
+
+    document.getElementById('clearCart').addEventListener('click', () => {
+      clearCart();
+      render();
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+    render();
+  </script>
+</body>
+</html>

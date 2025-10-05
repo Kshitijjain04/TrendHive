@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TrendHive</title>
+  <meta name="description" content="A modern, responsive product gallery with filters, modal previews, and cart." />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Swiper (Optional) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand">TrendHive</h1>
+
+      <nav class="nav">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="filters">Menu</button>
+        <ul id="filters" class="filters" role="list"></ul>
+      </nav>
+
+      <!-- Mini Cart -->
+      <button class="cart-button" aria-label="View cart" onclick="location.href='cart.html'">
+        <span class="cart-icon">🛒</span>
+        <span id="cartCount" class="cart-count" aria-live="polite">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h2 class="hero-title">Showcase products beautifully</h2>
+      <p class="hero-subtitle">Simple, fast, and responsive gallery with filters, quick previews, and cart.</p>
+
+      <label class="search-label" for="searchInput">Search products</label>
+      <input id="searchInput" class="search-input" type="search" placeholder="Search by name or tag..." aria-label="Search products" />
+    </div>
+  </section>
+
+  <!-- Product Grid -->
+  <main class="container">
+    <section aria-labelledby="gallery-heading">
+      <h2 id="gallery-heading" class="sr-only">Product Gallery</h2>
+      <div id="productGrid" class="grid" role="list"></div>
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="productModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-content" role="document">
+      <button class="modal-close" aria-label="Close dialog" data-close-modal>&times;</button>
+
+      <header class="modal-header">
+        <h3 id="modalTitle"></h3>
+        <span id="modalPrice" class="price"></span>
+      </header>
+
+      <!-- Optional Swiper -->
+      <div class="swiper-container-wrapper">
+        <div class="swiper product-swiper" aria-label="Product images slider">
+          <div class="swiper-wrapper" id="modalSwiperWrapper"></div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev" aria-label="Previous image"></div>
+          <div class="swiper-button-next" aria-label="Next image"></div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <p id="modalDesc"></p>
+        <ul id="modalMeta" class="meta" role="list"></ul>
+      </div>
+
+      <footer class="modal-footer">
+        <button id="modalAddToCart" class="btn primary">Add to Cart</button>
+        <button class="btn">View Details</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> Small Business Showcase. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { updateCartCount } from './cart.js';
+    updateCartCount();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
