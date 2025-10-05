@@ -1,9 +1,7 @@
-// script.js — homepage/gallery
+// script.js — homepage
 
-// Placeholder image helper using Picsum
 const img = (name) => `./images/${name}`;
 
-// Sample products using local images in images/ folder
 const PRODUCTS = [
   { id: "p-001", name: "Aurora Headphones", price: 99.0, category: "Electronics", tags: ["audio", "wireless"], images: [img("Aurora Headphones.jpeg"), img("Aurora Headphones.jpeg")], description: "Lightweight wireless headphones with deep bass and 30-hour battery life." },
   { id: "p-002", name: "Summit Backpack", price: 59.0, category: "Accessories", tags: ["outdoor", "travel"], images: [img("Summit Backpack.jpeg"), img("Summit Backpack.jpeg")], description: "Durable 25L backpack with water-resistant fabric and multiple compartments." },
